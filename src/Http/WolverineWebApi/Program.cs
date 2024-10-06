@@ -92,6 +92,8 @@ builder.Host.UseWolverine(opts =>
     opts.CodeGeneration.TypeLoadMode = TypeLoadMode.Auto;
 });
 
+builder.Services.AddWolverineExtension<TestExtenssion>();
+
 builder.Services.ConfigureSystemTextJsonForWolverineOrMinimalApi(o =>
 {
     // Do whatever you want here to customize the JSON
@@ -225,3 +227,15 @@ app.MapPutToWolverine<CustomRequest, CustomResponse>("/wolverine/request");
     #endregion
 
 await app.RunOaktonCommands(args);
+
+public class TestExtenssion : IWolverineExtension
+{
+    public void Configure(WolverineOptions options)
+    {
+        options.Services.AddSingleton<Test>();
+    }
+}
+
+public class Test
+{
+}
