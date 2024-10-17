@@ -14,6 +14,7 @@ public interface IMartenOp : ISideEffect
     void Execute(IDocumentSession session);
 }
 
+
 #endregion
 
 /// <summary>
@@ -106,6 +107,19 @@ public static class MartenOps
     }
 
     /// <summary>
+    /// Return a side effect of starting a new event stream in Marten
+    /// </summary>
+    /// <param name="streamId"></param>
+    /// <param name="tenantId"></param>
+    /// <param name="events"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static StartStream<T> StartStream<T>(Guid streamId, string? tenantId, params object[] events) where T : class
+    {
+        return new StartStream<T>(streamId, tenantId, events);
+    }
+
+    /// <summary>
     /// Return a side effect of starting a new event stream in Marten. This overload
     /// creates a sequential Guid for the new stream that can be accessed from the
     /// return value
@@ -129,6 +143,19 @@ public static class MartenOps
     public static IStartStream StartStream<T>(string streamKey, params object[] events) where T : class
     {
         return new StartStream<T>(streamKey, null, events);
+    }
+    
+    /// <summary>
+    /// Return a side effect of starting a new event stream in Marten
+    /// </summary>
+    /// <param name="streamKey"></param>
+    /// <param name="tenantId"></param>
+    /// <param name="events"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static IStartStream StartStream<T>(string streamKey, string? tenantId, params object[] events) where T : class
+    {
+        return new StartStream<T>(streamKey, tenantId, events);
     }
 
     /// <summary>
