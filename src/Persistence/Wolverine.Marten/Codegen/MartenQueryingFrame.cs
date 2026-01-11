@@ -107,5 +107,18 @@ internal class MartenBatchFrame : AsyncFrame
         
         _cancellation = chain.FindVariable(typeof(CancellationToken));
         yield return _cancellation;
+
+        // CRITICAL: Also yield the variables that the batchable frames depend on
+        // This ensures those variables are declared before we try to use them in the batch enlistment code
+        foreach (var op in _operations)
+        {
+            if (op is Frame frame)
+            {
+                foreach (var variable in frame.FindVariables(chain))
+                {
+                    yield return variable;
+                }
+            }
+        }
     }
 }
